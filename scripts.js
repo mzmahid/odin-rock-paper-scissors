@@ -99,4 +99,4 @@ function playGame() {
         console.log("It's a draw, No one wins");
 }
 
-playGame();
+// playGame();
