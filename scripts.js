@@ -1,3 +1,55 @@
+const body = document.querySelector("body");
+const gameWindow = document.querySelector(".gameWindow");
+const roundInfo = document.querySelector("#roundInfo");
+const hMove = document.querySelector("#hMove");
+const cMove = document.querySelector("#cMove");
+const hScore = document.querySelector("#hScore");
+const cScore = document.querySelector("#cScore");
+const btns = document.querySelector(".btns");
+const roundRes = document.querySelector("#roundRes");
+const winner = document.querySelector("#winner");
+const winnerTxt = document.querySelector(".winnerTxt");
+
+let roundPlayed = 1;
+totalRounds = 5;
+let canPlay = true;
+let humanScore = 0;
+let computerScore = 0;
+
+function createResetBtn () {
+    let newGameBtn = document.createElement("button");
+    newGameBtn.innerText = "Play again";
+    newGameBtn.classList.add("newGameBtn");
+    newGameBtn.addEventListener("click", resetGame);
+    winnerTxt.appendChild(newGameBtn);
+}
+
+function resetGame() {
+    hMove.innerText = "";
+    cMove.innerText = "";
+    roundRes.innerText = "Waiting for you first move";
+    hScore.innerText = 0;
+    cScore.innerText = 0;
+    humanScore = 0;
+    computerScore = 0;
+    roundPlayed = 1;
+    roundInfo.innerText = "Round " + roundPlayed + "/" + totalRounds;
+    winnerTxt.innerText = "";
+    canPlay = true;
+}
+
+btns.addEventListener("click", (e) => {
+    let humanMove = e.target.innerText.toUpperCase();
+    if(canPlay){
+        playRound(humanMove);
+    }
+    if(roundPlayed > totalRounds) {
+        canPlay = false;
+        checkStatus(roundPlayed, humanScore, computerScore);
+    }
+
+})
+
 function getComputerChoice() {
     let randomNum = Math.floor(Math.random() * 3);
     switch(randomNum) {
@@ -10,24 +62,14 @@ function getComputerChoice() {
     }
 }
 
-function getHumanChoice() {
-    let move = prompt("What is your next move? ");
-    if(!move) {
-        return "canceled";
-    }
-    else {
-        return move.toUpperCase();
-    }
-}
-
 function showMoves(humanMove, computerMove) {
-    console.log(`Your picked      = ${humanMove}`);
-    console.log(`Computer picked  = ${computerMove}`)
+    hMove.innerText = humanMove;
+    cMove.innerText = computerMove;
 }
 
 function showScore(humanScore, computerScore) {
-    console.log(`Your score      = ${humanScore}`);
-    console.log(`Computer Score  = ${computerScore}`)
+        hScore.innerText = humanScore;
+        cScore.innerText = computerScore;
 }
 
 function getWinner(humanMove, computerMove) {
@@ -46,57 +88,46 @@ function getWinner(humanMove, computerMove) {
     }
 }
 
-function playRound() {
-    let humanMove = getHumanChoice();
-    if(humanMove === "canceled") {
-        console.log("Invalid user input");
-        return;
-    }
+function playRound(humanMove) {
+    roundPlayed++;
+    roundInfo.innerText = "Round " + roundPlayed + "/5";
     let computerMove = getComputerChoice();
     showMoves(humanMove, computerMove);
 
     if(humanMove === computerMove) {
-        console.log(`It's a draw, both picked ${humanMove}`);
+        roundRes.innerText = "It's a draw";
         showScore(humanScore, computerScore);
         return;
     }
 
     let winner = getWinner(humanMove, computerMove);
-    if(!winner){
-        console.log("Invalid user input");
-        return;
-    }
-    else if(winner === "player") {
-        console.log(`You win, ${humanMove} beats ${computerMove}`);
+
+    if(winner === "player") {
+        roundRes.innerText = `You win, ${humanMove} beats ${computerMove}`
         humanScore++;
     }
     else {
-        console.log(`You lose, ${computerMove} beats ${humanMove}`);
+        roundRes.innerText = `You lose, ${humanMove} beats ${computerMove}`
         computerScore++;
     }
     showScore(humanScore, computerScore);
 }
 
-let humanScore = 0;
-let computerScore = 0;
-
-function playGame() {
-    for(let i = 0 ; i < 5 ; i++) {
-        playRound();
-    }
-    let finalWinner = "";
+function checkStatus(roundPlayed, humanScore, computerScore) {
+    let winnerName = "";
     let isDraw = false;
     if(humanScore === computerScore)
         isDraw = true;
     else if(humanScore > computerScore) 
-        finalWinner = "You";
+        winnerName = "You";
     else 
-        finalWinner = "Computer";
+        winnerName = "Billy";
     
     if(!isDraw)
-        console.log(`Final winner is ${finalWinner}`);
+        winnerTxt.innerText = "Winner is " + winnerName;
     else 
-        console.log("It's a draw, No one wins");
-}
+        winnerTxt.innerText = "It's a draw, No one wins";
 
-// playGame();
+    roundInfo.innerText = "Game Over";
+    createResetBtn();
+}

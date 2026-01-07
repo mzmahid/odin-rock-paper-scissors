@@ -3,11 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
-    <script src="scripts.js"></script>
+    <script defer src="scripts.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h3>Don't forget to open developer console before pressing start(ctrl + shift + I)</h3>
-    <button class="startButton" onclick="playGame()">Start</button>
+    <div class="gameWindow">
+        <h1>Rock Paper Scissors</h1>
+        <h3>Human vs Billy</h3>
+        <p id="roundInfo">Round 1/5</p>
+        <div>
+            <p>You picked: <span id="hMove"></span></p>
+            <p>Computer picked: <span id="cMove"></span></p>
+            <p id="roundRes">Waiting for you first move</p>
+        </div>
+        <div>
+            <p>Mahid's score: <span id="hScore">0</span></p>
+            <p>Billy's score: <span id="cScore">0</span></p>
+        </div>
+        <div class="btns">
+            <button id="0">Rock</button>
+            <button id="1">Paper</button>
+            <button id="2">Scissors</button>
+        </div>
+    </div>
+    <p class="winnerTxt"></p>
 </body>
 </html>
